@@ -11,3 +11,7 @@ def profile(request):
 class EventCreate(CreateView):
   model = Event
   fields = ['name', 'date', 'time', 'location', 'description', 'cost']
+
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
