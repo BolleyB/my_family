@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
+from .models import UserForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 # Add the following import for the login_required decorator
@@ -14,13 +15,14 @@ def home(request):
 def signup(request):
   error_message = ''
   if request.method == 'POST':
-    form = UserCreationForm(request.POST)
+    form = UserForm(request.POST)
     if form.is_valid():
       user = form.save()
       login(request, user)
-      return redirect('index')
+      return redirect('home')
     else:
       error_message = 'Invalid sign up - try again'
-  form = UserCreationForm()
+  form = UserForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
