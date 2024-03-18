@@ -16,3 +16,5 @@ class Attendance(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     attendee = models.ForeignKey(User, on_delete=models.CASCADE)
     response = models.BooleanField(default=False)
+
+
