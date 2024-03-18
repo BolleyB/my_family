@@ -10,4 +10,4 @@ def profile(request):
 
 class EventCreate(CreateView):
   model = Event
-  fields = ['name', 'date', 'time', 'location', 'description', 'cost', 'organizer', 'attendees']
+  fields = ['name', 'date', 'time', 'location', 'description', 'cost']
