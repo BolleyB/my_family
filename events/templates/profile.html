@@ -1,15 +1,27 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile</title>
-  </head>
-  <body>
+{% block content %}
+  <div class="welcome-message">
     <h1>Welcome, {{ username }}</h1>
-  </body>
-</html>
+  </div>
 
+  <div class="container">
+    <div class="profile-info">
+      <!-- Display profile information -->
+      <h2>Profile Information</h2>
+      <!-- Add profile information here -->
+    </div>
+
+    <div class="friends">
+      <!-- Display friends -->
+      <h2>Friends</h2>
+      <!-- Add friend list here -->
+    </div>
+
+    <div class="events">
+      <!-- Display events -->
+      <h2>Events</h2>
+      <!-- Add event list here -->
+    </div>
+  </div>
 {% endblock %}
