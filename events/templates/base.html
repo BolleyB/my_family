@@ -10,33 +10,48 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.1.min.js"
+    ></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
     <header class="navbar-fixed">
       <nav>
-        <div class="nav-wrapper">
+        <div class="nav-wrapper cyan">
           <ul>
             <li>
               <a href="/" class="left brand-logo">&nbsp;&nbsp;My Family</a>
             </li>
           </ul>
-          <ul class="right">
+          <ul class="right" style="font-size: 25px">
             {% if user.is_authenticated %}
+            <li>Welcome, {{ user.username }}</li>
             <!-- insert links here for authenticated users -->
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/events/create/">Create Event</a></li>
             <li>
-              <a href="#">
-                <form method="post" action="{% url 'logout' %}">
-                  {% csrf_token %}
-                  <button type="submit" class="submit-link">Log Out</button>
-                </form>
-              </a>
+              <a class="dropdown-button" href="#" data-activates="dropdown1"
+                ><i class="material-icons">menu</i></a
+              >
             </li>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/events/create/">Create Event</a></li>
+              <li>
+                <a href="#">
+                  <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button-like-link">Log Out</button>
+                  </form>
+                </a>
+              </li>
+            </ul>
             {% else %}
             <li><a href="{% url 'login' %}">Log In</a></li>
-
             {% endif %}
           </ul>
         </div>
@@ -51,8 +66,10 @@
       </nav>
     </header>
     <main class="container">{% block content %} {% endblock %}</main>
-    <footer class="page-footer">
+    <footer class="page-footer cyan">
       <div class="right">All Rights Reserved, &copy; 2024 My Family &nbsp;</div>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
   </body>
 </html>
