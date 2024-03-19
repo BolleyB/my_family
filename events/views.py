@@ -20,7 +20,10 @@ def home(request):
 @login_required
 def profile(request):
     user = request.user
-    context = {'username': user.username}
+    profile = Profile.objects.get(user=user)
+    events = user.attending_events.all()
+    friends = profile.friends.all()
+    context = {'profile': profile, 'events': events, 'friends': friends, 'user': user}
     return render(request, 'profile.html', context)
 
 
