@@ -12,3 +12,27 @@ footer.page-footer {
   padding-top: 0;
   text-align: right;
 }
+
+.dropdown-content {
+  margin-top: 65px;
+  min-width: 260px;
+  align-items: center;
+  text-align: center;
+}
+
+.button-like-link {
+  height: 100%;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+  outline: none;
+}
+.button-like-link:active {
+background-color: lightgray;
+}
