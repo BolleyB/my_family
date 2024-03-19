@@ -1,3 +1,31 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Home</h1>
+<h1>Events</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Cost</th>
+            <th>Organizer/Host</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.name }} </td>
+            <td>{{ event.date }}</td>
+            <td>{{ event.time }}</td>
+            <td>{{ event.location }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.cost }}</td>
+            <td>{{ event.organizer }}</td>
+            <td><a href="{% url 'events_detail' event.id %}" class="event-details-btn">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
