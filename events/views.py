@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
-from .models import UserForm,Event, Profile
+from .models import UserForm, Event, Profile, Notification
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 # Add the following import for the login_required decorator
@@ -15,6 +15,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 def home(request):
      events = Event.objects.all()
      return render(request, 'home.html', {'events': events})
+
+@login_required
+def notifications(request):
+    user = request.user
+    notifications = Notification.objects.filter(recipient=user)
+    return render(request, 'notifications.html', {'notifications': notifications})
 
 
 @login_required
