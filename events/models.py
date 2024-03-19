@@ -11,6 +11,10 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     friends = models.ManyToManyField("self", symmetrical=True, blank=True)
 
+    def __str__(self):
+        return self.user.username
+
+
 class Event(models.Model):
     name = models.CharField(max_length=100)
     date = models.DateField()
