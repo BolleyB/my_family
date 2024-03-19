@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+     events = Event.objects.all()
+     return render(request, 'home.html', {'events': events})
 
 def signup(request):
   error_message = ''
@@ -33,7 +34,8 @@ def profile(request):
 class EventCreate(CreateView):
   model = Event
   fields = ['name', 'date', 'time', 'location', 'description', 'cost']
+  success_url = '/'
 
   def form_valid(self, form):
-    form.instance.user = self.request.user
+    form.instance.organizer = self.request.user
     return super().form_valid(form)
