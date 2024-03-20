@@ -10,10 +10,23 @@ from django.contrib.auth.decorators import login_required
 # Add the following import for the Classbased view
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+
+
+
+
 # Create your views here.
 def home(request):
      events = Event.objects.all()
      return render(request, 'home.html', {'events': events})
+
+
+@login_required
+def notificiations(request, event_id):
+   notifications = Notification.objects.filter(recipient=request.user)
+   notifications.update(read=True)
+   return render(request, 'notifications.html', {'notifications': notifications})
+
 
 @login_required
 def notifications(request):
@@ -73,3 +86,4 @@ def cancel_attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
    event.attendees.remove(request.user)
    return redirect('events_detail', event_id=event_id)
+

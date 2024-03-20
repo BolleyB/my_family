@@ -41,3 +41,12 @@ class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+
+
+class Invitation(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_invitations')
+    invitee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recieved_invitations')
+    message = models.CharField(max_length=255)
+    sent_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)

@@ -41,11 +41,15 @@
             <ul id="dropdown1" class="dropdown-content">
               <li><a href="/profile">Profile</a></li>
               <li><a href="/events/create/">Create Event</a></li>
+              <li><a href="{% url 'notifications' %}">Notifications</a></li>
+              <!-- Add link to notifications page -->
               <li>
                 <a href="#">
                   <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button-like-link">Log Out</button>
+                    <button type="submit" class="button-like-link">
+                      Log Out
+                    </button>
                   </form>
                 </a>
               </li>
@@ -55,14 +59,6 @@
             {% endif %}
           </ul>
         </div>
-        {% for notification in notifications %}
-        <div>
-          {% if not notification.read %}
-          <strong>{{ notification.message }}</strong>
-          {% else %} {{ notification.message }} {% endif %}
-          <small>{{ notification.created_at }}</small>
-        </div>
-        {% endfor %}
       </nav>
     </header>
     <main class="container">{% block content %} {% endblock %}</main>
