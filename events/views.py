@@ -13,6 +13,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+import googlemaps
+import os
 
 
 
@@ -117,3 +119,16 @@ def invite_friends(request, event_id):
         form = InvitationForm()
 
     return render(request, 'invite_friends.html', {'event': event, 'form': form})
+
+
+def update_location(request):
+   if request.user.is_authenticated:
+      if 'lat' in request.GET and 'lng' in request.GET:
+         lat = request.GET['lat']
+         lng = request.get['lng']
+         request.user.profile.latitude = lat
+         request.user.profile.longitude = lng
+         request.user.profile.save()
+   return render(request, '/')
+
+

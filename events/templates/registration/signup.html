@@ -2,6 +2,20 @@
 {% block content %}
 
 <h1>Sign Up</h1>
+<script>
+  function getLocationAndRedirect(){
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        window.location.href = '/update-location/?lat=' + lat + '&lng=' + lng;
+      });
+    } else {
+      alert("Location is not supported by this browser.");
+    }
+  }
+</script>
+
 
 <p class="red-text">{{ error_message }}</p>
 
@@ -10,5 +24,9 @@
   {{ form.as_p }}
   <input type="submit" class="btn" value="Sign Up">
 </form>
+
+<script>
+  document.querySelector('form').addEventListener('submit', getLocationAndRedirect);
+</script>
 
 {% endblock %}

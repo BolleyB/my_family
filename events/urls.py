@@ -12,4 +12,5 @@ urlpatterns = [
     path('events/<int:event_id>/cancel_attend/', views.cancel_attend_event, name='cancel_attend'),
     path('notifications/', views.notifications, name='notifications'),
     path('events/<int:event_id>/invite/', views.invite_friends, name='invite_friends')
+    path('update-location/', update_location, name='update_location'),
 ]
