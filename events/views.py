@@ -13,7 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-
+from django.urls import reverse
 
 
 # Create your views here.
@@ -88,31 +88,41 @@ def cancel_attend_event(request, event_id):
    return redirect('events_detail', event_id=event_id)
 
 
+def send_invitation(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    invitation = Invitation(event=event, inviter=request.user)
+    invitation.save()
+
+    invitation_url = request.build_absolute_uri(reverse('join_event', kwargs={'invitation_id': invitation.id}))
+    
+    # You can send the invitation URL to the invitee via email, message, or any other means
+    
+    messages.success(request, "Invitation sent successfully.")
+    return redirect('event_detail', event_id=event_id)
+
+def join_event(request, invitation_id):
+    invitation = get_object_or_404(Invitation, pk=invitation_id)
+
+    # Logic to join the event goes here
+
+    return redirect('event_detail', event_id=invitation.event.id)
+
+
 def invite_friends(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
     if request.method == 'POST':
         form = InvitationForm(request.POST)
         if form.is_valid():
-            invitee_usernames = form.cleaned_data['invitee'].split(',')
-            message = form.cleaned_data['message']
-            invited_users = []
+            invitation = form.save(commit=False)
+            invitation.event = event
+            invitation.inviter = request.user
+            invitation.save()
 
-            for username in invitee_usernames:
-                try:
-                    user = User.objects.get(username=username.strip())
-                    Invitation.objects.create(event=event, inviter=request.user, invitee=user, message=message)
-                    invited_users.append(user)
-                except User.DoesNotExist:
-                    messages.warning(request, f"User with username '{username}' does not exist.")
-
-            if invited_users:
-                # Send notification to inviter
-                Notification.objects.create(recipient=request.user, message="Invitation sent successfully.")
-                
-                messages.success(request, "Invitations sent successfully.")
-                return redirect('event_detail', event_id=event_id)
-
+            messages.success(request, "Invitations sent successfully.")
+            return redirect('events_detail', event_id=event_id)
+        else:
+            messages.error(request, "Failed to send invitations. Please correct the errors in the form.")
     else:
         form = InvitationForm()
 

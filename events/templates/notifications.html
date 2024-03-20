@@ -1,19 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-  <h2>Notifications</h2>
-  <div class="notifications">
-    {% for notification in notifications %}
-    <div class="notification">
-      {% if not notification.read %}
-      <strong>{{ notification.message }}</strong>
-      {% else %}
-      {{ notification.message }}
-      {% endif %}
-      <small>{{ notification.created_at }}</small>
-    </div>
-    {% endfor %}
-  </div>
-</div>
+  <h2>Send Invitation</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Invitation</button>
+  </form>
 {% endblock %}
+

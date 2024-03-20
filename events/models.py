@@ -12,7 +12,7 @@ class Notification(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='profile', null=True, blank=True)
+    # profile_picture = models.ImageField(upload_to='profile', null=True, blank=True)
     bio = models.TextField(blank=True)
     friends = models.ManyToManyField("self", symmetrical=True, blank=True)
 

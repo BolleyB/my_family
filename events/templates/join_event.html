@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Join Event</h2>
+  <p>You've been invited to join the event "{{ invitation.event.name }}".</p>
+  <p>Message from the inviter: "{{ invitation.message }}"</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Join Event</button>
+  </form>
+{% endblock %}
