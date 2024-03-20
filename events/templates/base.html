@@ -29,6 +29,13 @@
               <a href="/" class="left brand-logo">&nbsp;&nbsp;My Family</a>
             </li>
           </ul>
+          <ul>
+            <form method="get" action="{% url 'search' %}">
+              <input id="search" type="search" required />
+              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              <i class="material-icons">close</i>
+            </form>
+          </ul>
           <ul class="right" style="font-size: 25px">
             {% if user.is_authenticated %}
             <li>Welcome, {{ user.username }}</li>
@@ -45,7 +52,9 @@
                 <a href="#">
                   <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button-like-link">Log Out</button>
+                    <button type="submit" class="button-like-link">
+                      Log Out
+                    </button>
                   </form>
                 </a>
               </li>
