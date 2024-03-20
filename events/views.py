@@ -126,4 +126,7 @@ def invite_friends(request, event_id):
     else:
         form = InvitationForm()
 
-    return render(request, 'invite_friends.html', {'event': event, 'form': form})
+    # Generate the shareable link
+    shareable_link = request.build_absolute_uri(reverse('join_event', kwargs={'invitation_id': 'placeholder'}))
+
+    return render(request, 'invite_friends.html', {'event': event, 'form': form, 'shareable_link': shareable_link})

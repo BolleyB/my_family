@@ -1,47 +1,56 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <div class="event-details">
-    <h2>{{ event.name }}</h2>
-    <p>Date: {{ event.date }}</p>
-    <p>Time: {{ event.time }}</p>
-    <p>Location: {{ event.location }}</p>
-    <p>Description: {{ event.description }}</p>
-    <p>Cost: {{ event.cost }}</p>
+  <h2>{{ event.name }}</h2>
+  <p>Date: {{ event.date }}</p>
+  <p>Time: {{ event.time }}</p>
+  <p>Location: {{ event.location }}</p>
+  <p>Description: {{ event.description }}</p>
+  <p>Cost: {{ event.cost }}</p>
 
-    {% if request.user in event.attendees.all %}
-        <form action="{% url 'cancel_attend' event.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Cancel Attending</button>
-        </form>
-    {% else %}
-        <form action="{% url 'attend' event.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Attend</button>
-        </form>
-        <div class="invite-section">
-            <h3>Invite Friends:</h3>
-            <form action="{% url 'invite_friends' event.id %}" method="post">
-                {% csrf_token %}
-                <select name="invitee" multiple>
-                    {% for friend in request.user.profile.friends.all %}
-                        <option value="{{ friend.id }}">{{ friend.username }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" class="btn btn-success">Send Invite</button>
-            </form>
-        </div>
-    {% endif %}
+  {% if request.user in event.attendees.all %}
+  <form action="{% url 'cancel_attend' event.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Cancel Attending</button>
+  </form>
+  {% else %}
+  <form action="{% url 'attend' event.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Attend</button>
+  </form>
+  <div class="invite-section">
+    <h3>Invite Friends:</h3>
+    <form action="{% url 'invite_friends' event.id %}" method="post">
+      {% csrf_token %}
+      <select name="invitee" multiple>
+        {% for friend in request.user.profile.friends.all %}
+        <option value="{{ friend.id }}">{{ friend.username }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-success">Send Invite</button>
+    </form>
+  </div>
+  {% endif %}
 </div>
 
 <div class="attendees-list">
-    <h3>Attendees:</h3>
-    <ul>
-        {% for attendee in event.attendees.all %}
-            <li>{{ attendee.username }}</li>
-        {% endfor %}
-    </ul>
+  <h3>Attendees:</h3>
+  <ul>
+    {% for attendee in event.attendees.all %}
+    <li>{{ attendee.username }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="share-link-box">
+  <h3>Shareable Link:</h3>
+  <input
+    type="text"
+    id="shareable-link"
+    value="{% url 'join_event' invitation_id=event.id %}"
+    readonly
+  />
+  <button onclick="copyLink()" class="btn btn-primary">Copy Link</button>
 </div>
 
 {% endblock %}

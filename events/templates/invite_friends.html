@@ -1,37 +1,10 @@
-{% extends 'base.html' %} {% block content %}
-
-<div class="invite-section">
-  <h3>Invite Friends:</h3>
-  <form action="{% url 'invite_friends' event.id %}" method="post">
-    {% csrf_token %}
-    <select name="invitee" multiple>
-      {% for friend in request.user.profile.friends.all %}
-      <option value="{{ friend.id }}">{{ friend.username }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-success">Send Invite</button>
-  </form>
-
-  <div class="share-link-box">
-    <h3>Shareable Link:</h3>
-    <input
-      type="text"
-      id="shareable-link"
-      value="{{ request.build_absolute_uri }}?invitation_id={{ invitation.id }}"
-      readonly
-    />
-    <button onclick="copyLink()" class="btn btn-primary">Copy Link</button>
-  </div>
+<div class="share-link-box">
+  <h3>Shareable Link:</h3>
+  <input
+    type="text"
+    id="shareable-link"
+    value="{{ shareable_link }}"
+    readonly
+  />
+  <button onclick="copyLink()" class="btn btn-primary">Copy Link</button>
 </div>
-
-<script>
-  function copyLink() {
-    var copyText = document.getElementById("shareable-link");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    document.execCommand("copy");
-    alert("Copied the link: " + copyText.value);
-  }
-</script>
-
-{% endblock %}
