@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from .models import UserForm,Event
+from .forms import SearchForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 # Add the following import for the login_required decorator
@@ -55,3 +56,14 @@ def cancel_attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
    event.attendees.remove(request.user)
    return redirect('events_detail', event_id=event_id)
+
+def search_view(request):
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Event.objects.filter(your_field__icontains=query)
+            return render(request, 'search_results.html', {'results': results, 'query': query})
+    else:
+        form = SearchForm()
+    return render(request, '/', {'form': form})
