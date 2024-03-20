@@ -28,7 +28,19 @@
             <li>
               <a href="/" class="left brand-logo">&nbsp;&nbsp;My Family</a>
             </li>
+            <li id="search">
+              <div class="search-container">
+                <form
+                  autocomplete="off"
+                  method="get"
+                  action="{% url 'search' %}"
+                >
+                  <input type="text" placeholder="Search.." name="search" />
+                </form>
+              </div>
+            </li>
           </ul>
+
           <ul class="right" style="font-size: 25px">
             {% if user.is_authenticated %}
             <li>Welcome, {{ user.username }}</li>
