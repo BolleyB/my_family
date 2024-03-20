@@ -55,6 +55,14 @@
             {% endif %}
           </ul>
         </div>
+        {% for notification in notifications %}
+        <div>
+          {% if not notification.read %}
+          <strong>{{ notification.message }}</strong>
+          {% else %} {{ notification.message }} {% endif %}
+          <small>{{ notification.created_at }}</small>
+        </div>
+        {% endfor %}
       </nav>
     </header>
     <main class="container">{% block content %} {% endblock %}</main>
