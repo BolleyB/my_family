@@ -3,6 +3,8 @@ from django.views.generic import ListView, DetailView
 
 
 from .models import UserForm, Event, Profile, Notification
+from .models import UserForm,Event
+from .models import UserForm, Event, Profile, Notification, Invitation
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 # Add the following import for the login_required decorator
@@ -10,7 +12,9 @@ from django.contrib.auth.decorators import login_required
 # Add the following import for the Classbased view
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
+from .forms import InvitationForm
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 
@@ -18,7 +22,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 def home(request):
      events = Event.objects.all()
      return render(request, 'home.html', {'events': events})
-
 
 @login_required
 def notificiations(request, event_id):
@@ -88,11 +91,45 @@ def cancel_attend_event(request, event_id):
 
 def search_view(request):
     query = request.GET.get('search')  # Get the search query from the request
+    query2 = request.GET.get('typeofSearch')  # Get the search type from the request
+    print(query2)
     if query:
         # Perform a case-insensitive search using '__icontains'
         results = Event.objects.filter(name__icontains=query)
+        if query2 == 'person':
+           results = User.objects.filter(username__icontains=query)
     else:
         results = Event.objects.none()  # Return an empty queryset if no query provided
-    return render(request, 'search_results.html', {'query': query, 'results': results})
+    return render(request, 'search_results.html', {'query': query, 'results': results, 'query2': query2})
 
 
+
+def invite_friends(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+
+    if request.method == 'POST':
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            invitee_usernames = form.cleaned_data['invitee'].split(',')
+            message = form.cleaned_data['message']
+            invited_users = []
+
+            for username in invitee_usernames:
+                try:
+                    user = User.objects.get(username=username.strip())
+                    Invitation.objects.create(event=event, inviter=request.user, invitee=user, message=message)
+                    invited_users.append(user)
+                except User.DoesNotExist:
+                    messages.warning(request, f"User with username '{username}' does not exist.")
+
+            if invited_users:
+                # Send notification to inviter
+                Notification.objects.create(recipient=request.user, message="Invitation sent successfully.")
+                
+                messages.success(request, "Invitations sent successfully.")
+                return redirect('event_detail', event_id=event_id)
+
+    else:
+        form = InvitationForm()
+
+    return render(request, 'invite_friends.html', {'event': event, 'form': form})

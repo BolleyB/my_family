@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <div class="event-details">
@@ -23,7 +24,7 @@
             <h3>Invite Friends:</h3>
             <form action="{% url 'invite_friends' event.id %}" method="post">
                 {% csrf_token %}
-                <select name="invited_friends" multiple>
+                <select name="invitee" multiple>
                     {% for friend in request.user.profile.friends.all %}
                         <option value="{{ friend.id }}">{{ friend.username }}</option>
                     {% endfor %}

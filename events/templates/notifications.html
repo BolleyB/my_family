@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+
+{% block content %}
 <div class="container">
   <h2>Notifications</h2>
   <div class="notifications">
@@ -6,7 +8,9 @@
     <div class="notification">
       {% if not notification.read %}
       <strong>{{ notification.message }}</strong>
-      {% else %} {{ notification.message }} {% endif %}
+      {% else %}
+      {{ notification.message }}
+      {% endif %}
       <small>{{ notification.created_at }}</small>
     </div>
     {% endfor %}

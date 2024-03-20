@@ -46,9 +46,9 @@
             <li>Welcome, {{ user.username }}</li>
             <!-- insert links here for authenticated users -->
             <li>
-              <a class="dropdown-button" href="#" data-activates="dropdown1"
-                ><i class="material-icons">menu</i></a
-              >
+              <a class="dropdown-button" href="#" data-activates="dropdown1">
+                <i class="material-icons">menu</i>
+              </a>
             </li>
             <ul id="dropdown1" class="dropdown-content">
               <li><a href="/profile">Profile</a></li>
@@ -73,7 +73,21 @@
         </div>
       </nav>
     </header>
-    <main class="container">{% block content %} {% endblock %}</main>
+    <main class="container">
+      {% block content %} {% if messages %}
+      <div class="messages">
+        <ul class="collection">
+          {% for message in messages %}
+          <li
+            class="collection-item {% if message.tags %}{{ message.tags }}{% endif %}"
+          >
+            {{ message }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %} {% endblock %}
+    </main>
     <footer class="page-footer cyan">
       <div class="right">All Rights Reserved, &copy; 2024 My Family &nbsp;</div>
     </footer>

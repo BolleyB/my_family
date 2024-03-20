@@ -41,3 +41,22 @@ footer.page-footer {
   margin-left: 30%;
   width: 600px;
 }
+#type-of-search {
+  display: flex;
+  justify-content: center;
+}
+
+#type-of-search form button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+}
+
+#type-of-search form button:last-child {
+  margin-right: 20px;
+}
