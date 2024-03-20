@@ -2,7 +2,7 @@
 <h2>Search Results for "{{ query }}"</h2>
 <ul>
   {% for item in results %}
-  <li>{{ item }}</li>
+  <li>{{ item.name }}</li>
   {% empty %}
   <li>No results found.</li>
   {% endfor %}

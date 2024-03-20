@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 
-from .models import UserForm,Event
-from .forms import SearchForm
+
 from .models import UserForm, Event, Profile, Notification
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
@@ -11,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 # Add the following import for the Classbased view
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
 
 
 
@@ -89,14 +87,12 @@ def cancel_attend_event(request, event_id):
    return redirect('events_detail', event_id=event_id)
 
 def search_view(request):
-    if request.method == 'GET':
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
-            results = Event.objects.filter(your_field__icontains=query)
-            return render(request, 'search_results.html', {'results': results, 'query': query})
+    query = request.GET.get('search')  # Get the search query from the request
+    if query:
+        # Perform a case-insensitive search using '__icontains'
+        results = Event.objects.filter(name__icontains=query)
     else:
-        form = SearchForm()
-    return render(request, '/', {'form': form})
+        results = Event.objects.none()  # Return an empty queryset if no query provided
+    return render(request, 'search_results.html', {'query': query, 'results': results})
 
 

@@ -34,5 +34,10 @@ footer.page-footer {
   outline: none;
 }
 .button-like-link:active {
-background-color: lightgray;
+  background-color: lightgray;
+}
+
+#search {
+  margin-left: 30%;
+  width: 600px;
 }

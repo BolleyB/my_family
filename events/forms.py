@@ -6,5 +6,3 @@ class ProfileForm(forms.ModelForm):
         model = CustomUser
         fields = ['profile_image']
         
-class SearchForm(forms.Form):
-    query = forms.CharField(label='Search')
