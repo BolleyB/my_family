@@ -1,31 +1,56 @@
 {% extends 'base.html' %} {% block content %}
-<div class="welcome-message">
-  <h1>Welcome, {{ user.username }}</h1>
-  <p>{{ profile.bio }}</p>
+<div class="main">
+  <h2>{{user.username}}</h2>
+  <div class="card">
+    <div class="card-body">
+      <a href="#"><i class="fa fa-pen fa-xs edit"></i></a>
+      <table>
+        <tbody>
+          <tr>
+            <td>First Name</td>
+            <td>:</td>
+            <td>{{user.first_name}}</td>
+          </tr>
+          <tr>
+            <td>Last Name</td>
+            <td>:</td>
+            <td>{{user.first_name}}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>:</td>
+            <td>{{user.first_name}}</td>
+          </tr>
+          <tr>
+            <td>Bio</td>
+            <td>:</td>
+            <td>{{user.profile.bio}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <h2>Friends</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul>
+        {% for friend in friends %}
+        <li>{{ friend.username }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <h2>Attending Events</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul style="text-align: center">
+        {% for event in events %}
+        <li>
+          <a href="{% url 'events_detail' event.id %}">{{ event.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endblock %}
 </div>
-
-<div class="container">
-  <div class="profile-info">
-    <h2>Profile Information</h2>
-    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-  </div>
-
-  <div class="friends">
-    <h2>Friends</h2>
-    <ul>
-      {% for friend in friends %}
-      <li>{{ friend.username }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="events">
-    <h2>Events</h2>
-    <ul>
-      {% for event in events %}
-      <li>{{ event.name }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-{% endblock %}
