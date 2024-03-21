@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect,reverse, get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from .models import UserForm, Event, Profile, Notification, Invitation, Attendance
@@ -12,6 +12,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .forms import ProfileUpdateForm
+
 
 
 
@@ -35,17 +37,14 @@ def notifications(request):
 
 
 @login_required
-def profile(request):
-    user = request.user
-    profile = Profile.objects.get(user=user)
-
-    usergetid = User.objects.get(username=user)
-    user_id = usergetid.id
-    print(user_id)
+def profile(request, user_id):
+    current_user = request.user
+    user = User.objects.get(id=user_id)
+    profile = Profile.objects.get(user=user_id)
     attended_events = Event.objects.filter(attendance__attendee_id=user_id)
-
-    friends = profile.friends.all()
-    context = {'profile': profile, 'events': attended_events, 'friends': friends, 'user': user}
+    friends = user.profile.get_friends()
+    print(friends)
+    context = {'profile': profile, 'events': attended_events, 'friends': friends, 'profileuser': user, 'currentuser': current_user}
     return render(request, 'profile.html', context)
 
 
@@ -78,7 +77,9 @@ class EventCreate(LoginRequiredMixin,CreateView):
   def form_valid(self, form):
     form.instance.organizer = self.request.user
     return super().form_valid(form)
-  
+
+
+@login_required 
 def events_detail(request, event_id):
    event = Event.objects.get(id=event_id)
    return render(request, 'events/detail.html', {
@@ -141,3 +142,30 @@ def invite_friends(request, event_id):
         form = InvitationForm()
 
     return render(request, 'invite_friends.html', {'event': event, 'form': form})
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            request.user.email = profile_form.cleaned_data['user'].email
+            request.user.first_name = profile_form.cleaned_data['user'].first_name
+            request.user.last_name = profile_form.cleaned_data['user'].last_name
+            request.user.save()
+            return redirect(reverse('profile', kwargs={'user_id': request.user.id}))
+    else:
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+    return render(request, 'update_profile.html', {'profile_form': profile_form})
+
+@login_required
+def add_friend(request, friend_id):
+    friend = get_object_or_404(User, pk=friend_id)
+    request.user.profile.add_friend(friend.profile)
+    return redirect(reverse('profile', kwargs={'user_id': friend_id}))
+
+@login_required
+def remove_friend(request, friend_id):
+    friend = get_object_or_404(User, pk=friend_id)
+    request.user.profile.remove_friend(friend.profile)
+    return redirect(reverse('profile', kwargs={'user_id': friend_id}))

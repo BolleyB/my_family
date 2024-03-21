@@ -1,60 +1,57 @@
 @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
 
 * {
-    margin: 0;
+  margin: 0;
 }
 
 body {
-    background-color: #e8f5ff;
-    font-family: Arial;
-    overflow: hidden;
+  background-color: #e8f5ff;
+  font-family: Arial;
+  overflow: auto;
 }
 
-
 .profile {
-    margin-bottom: 20px;
-    margin-top: -12px;
-    text-align: center;
+  margin-bottom: 20px;
+  margin-top: -12px;
+  text-align: center;
 }
 
 .profile img {
-    border-radius: 50%;
-    box-shadow: 0px 0px 5px 1px grey;
+  border-radius: 50%;
+  box-shadow: 0px 0px 5px 1px grey;
 }
 
 .main {
-    margin-top: 2%;
-    margin-left: 25%;
-    font-size: 28px;
-    padding: 0 10px;
-    width: 58%;
+  margin-top: 2%;
+  margin-left: 25%;
+  font-size: 28px;
+  padding: 0 10px;
+  width: 58%;
 }
 
 .main h2 {
-    color: #333;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 24px;
-    margin-bottom: 10px;
+  color: #333;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
 .main .card {
-    background-color: #fff;
-    border-radius: 18px;
-    box-shadow: 1px 1px 8px 0 grey;
-    height: auto;
-    margin-bottom: 20px;
-    padding: 20px 0 20px 50px;
+  background-color: #fff;
+  border-radius: 18px;
+  box-shadow: 1px 1px 8px 0 grey;
+  height: auto;
+  margin-bottom: 20px;
+  padding: 20px 0 20px 50px;
 }
 
 .main .card table {
-    border: none;
-    font-size: 16px;
-    height: 270px;
-    width: 80%;
+  border: none;
+  font-size: 16px;
 }
 
 .edit {
-    position: absolute;
-    color: #e7e7e8;
-    right: 14%;
+  position: absolute;
+  color: #e7e7e8;
+  right: 14%;
 }

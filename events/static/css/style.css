@@ -38,8 +38,16 @@ footer.page-footer {
 }
 
 #search {
-  margin-left: 30%;
+  margin-top: 4px;
+  margin-left: 37%;
   width: 600px;
+}
+#search .search-container input {
+  background-color: white;
+  font-size: 24px;
+}
+#search .search-container input:focus {
+  background-color: rgb(211, 255, 242);
 }
 #type-of-search {
   display: flex;

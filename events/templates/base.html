@@ -53,7 +53,7 @@
               </a>
             </li>
             <ul id="dropdown1" class="dropdown-content">
-              <li><a href="{% url 'profile' %}">Profile</a></li>
+              <li><a href="{% url 'profile' user.id%}">Profile</a></li>
               <li><a href="/events/create/">Create Event</a></li>
               <li><a href="{% url 'notifications' %}">Notifications</a></li>
               <!-- Add link to notifications page -->
