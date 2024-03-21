@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <div class="event-details">
   <h2>{{ event.name }}</h2>
@@ -21,13 +19,7 @@
     <button type="submit" class="btn btn-primary">Attend</button>
   </form>
   <div class="invite-section">
-    <h3>Invite Friends:</h3>
-    <form id="invite-form" method="post">
-      {% csrf_token %}
-      <input type="text" id="search-input" placeholder="Search for users">
-      <ul id="search-results"></ul>
-      <button type="submit" class="btn btn-success">Send Invite</button>
-    </form>
+    <a href="{% url 'send_invitation' event.id %}">Send Invitation</a>
   </div>
   {% endif %}
 </div>
@@ -53,25 +45,24 @@
 </div>
 
 <script>
-  // AJAX live search
-  const searchInput = document.getElementById('search-input');
-  const searchResults = document.getElementById('search-results');
-  const inviteForm = document.getElementById('invite-form');
+  const searchInput = document.getElementById("search-input");
+  const searchResults = document.getElementById("search-results");
+  const inviteForm = document.getElementById("invite-form");
 
-  searchInput.addEventListener('input', () => {
+  searchInput.addEventListener("input", () => {
     const searchTerm = searchInput.value.trim();
 
-    if (searchTerm === '') {
-      searchResults.innerHTML = '';
+    if (searchTerm === "") {
+      searchResults.innerHTML = "";
       return;
     }
 
     fetch(`/search/?q=${searchTerm}`)
-      .then(response => response.json())
-      .then(data => {
-        searchResults.innerHTML = '';
-        data.forEach(user => {
-          const listItem = document.createElement('li');
+      .then((response) => response.json())
+      .then((data) => {
+        searchResults.innerHTML = "";
+        data.forEach((user) => {
+          const listItem = document.createElement("li");
           listItem.textContent = user.username;
           listItem.dataset.userId = user.id;
           searchResults.appendChild(listItem);
@@ -79,20 +70,46 @@
       });
   });
 
-  inviteForm.addEventListener('submit', (event) => {
+  inviteForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const selectedUsers = Array.from(searchResults.querySelectorAll('li')).filter(li => li.classList.contains('selected'));
-    const selectedUserIds = selectedUsers.map(li => li.dataset.userId);
+    const selectedUsers = Array.from(
+      searchResults.querySelectorAll("li")
+    ).filter((li) => li.classList.contains("selected"));
+    const selectedUserIds = selectedUsers.map((li) => li.dataset.userId);
 
-    // Send the selected user ids to the server for invitation
-    // You can use AJAX here to send the selected user ids to the server
+    // Send the selected user ids to the server for invitation via AJAX
+    fetch(inviteForm.getAttribute("action"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+          .value,
+      },
+      body: JSON.stringify({ selectedUserIds: selectedUserIds }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to send invitation");
+        }
+      })
+      .then((data) => {
+        // Handle successful response
+        alert(data.message); // Display a success message
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
+        alert("Failed to send invitation"); // Display an error message
+      });
   });
 
-  searchResults.addEventListener('click', (event) => {
+  searchResults.addEventListener("click", (event) => {
     const listItem = event.target;
-    if (listItem.tagName === 'LI') {
-      listItem.classList.toggle('selected');
+    if (listItem.tagName === "LI") {
+      listItem.classList.toggle("selected");
     }
   });
 </script>

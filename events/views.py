@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.http import JsonResponse, HttpResponseRedirect
 
-from django.http import JsonResponse
 
 from .models import UserForm,Event
 from .models import UserForm, Event, Profile, Notification, Invitation
@@ -23,12 +22,14 @@ def home(request):
      events = Event.objects.all()
      return render(request, 'home.html', {'events': events})
 
-@login_required
 def notifications(request):
-   notifications = Notification.objects.filter(recipient=request.user)
-   print('notifications', notifications)
-   notifications.update(read=True)
-   return render(request, 'notifications.html', {'notifications': notifications})
+    # Get notifications for the logged-in user
+    notifications = Notification.objects.filter(recipient=request.user)
+
+    # Get invitations for the logged-in user
+    invitations = Invitation.objects.filter(invitee=request.user)
+
+    return render(request, 'notifications.html', {'notifications': notifications, 'invitations': invitations})
 
 
 @login_required
@@ -85,31 +86,6 @@ def cancel_attend_event(request, event_id):
 
 
 
-
-def invite_friends(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-
-    if request.method == 'POST':
-        form = InvitationForm(request.POST)
-        if form.is_valid():
-            invitation = form.save(commit=False)
-            invitation.event = event
-            invitation.inviter = request.user
-            invitation.save()
-
-            messages.success(request, "Invitations sent successfully.")
-            return redirect('events_detail', event_id=event_id)
-        else:
-            messages.error(request, "Failed to send invitations. Please correct the errors in the form.")
-    else:
-        form = InvitationForm()
-
-    # Generate the shareable link
-    shareable_link = request.build_absolute_uri(reverse('join_event', kwargs={'invitation_id': 'placeholder'}))
-
-    return render(request, 'invite_friends.html', {'event': event, 'form': form, 'shareable_link': shareable_link})
-
-
 @login_required
 def read_notifications(request):
     read_notifications = Notification.objects.filter(recipient=request.user, read=True)
@@ -158,32 +134,41 @@ def join_event(request, invitation_id):
     return render(request, 'join_event.html', {'invitation': invitation})
 
 
-
 def send_invitation(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-
+    event = Event.objects.get(id =event_id)
+    inviter = User.objects.get(id=request.user.id)
     if request.method == 'POST':
-        form = InvitationForm(request.POST)
-        if form.is_valid():
-            invitation = form.save(commit=False)
-            invitation.event = event
-            invitation.inviter = request.user
-            invitation.save()
-
-            # Create and save notification
-            Notification.objects.create(
-                sender=request.user,
-                recipient=invitation.invitee,
-                message=f"You have received an invitation from {request.user.username} for event '{event.name}'."
-            )
-
-            # Display a success message
-            messages.success(request, "Invitation sent successfully.")
-            return redirect('event_detail', event_id=event_id)
-        else:
-            # Display an error message if form is not valid
-            messages.error(request, "Failed to send invitation. Please correct the errors in the form.")
+       form = InvitationForm(request.POST, initial={'event': event, 'inviter': inviter })
+       if form.is_valid():
+          invitation = form.save()
+          return redirect('event_detail')
     else:
-        form = InvitationForm()
+       form = InvitationForm()
+    return render(request, 'send_invitation.html', {'form': form })
+    # event = get_object_or_404(Event, pk=event_id)
 
-    return render(request, 'invite_friends.html', {'event': event, 'form': form})
+    # if request.method == 'POST':
+    #     # Process the form data
+    #     selected_user_ids = request.POST.getlist('selected_users')
+
+    #     # Send invitations to selected users
+    #     for user_id in selected_user_ids:
+    #         invitee = User.objects.filter(pk=user_id).first()
+    #         print(invitee)
+    #         if invitee:
+    #             form = InvitationForm(request.POST, event=event, inviter=request.user, invitee=invitee)
+    #             invitation = form.save()
+    #             print(invitation)
+    #             # Send notification to invitee
+    #             notification = Notification(
+    #                 recipient=invitee,
+    #                 event=event,
+    #                 message=f"You have received an invitation from {request.user.username} to attend {event.name}."
+    #             )
+    #             notification.save()
+
+    #     messages.success(request, "Invitations sent successfully.")
+    #     return JsonResponse({'message': 'Invitations sent successfully.'})
+
+    # Handle GET request (if needed)
+    return JsonResponse({'error': 'GET request not allowed.'}, status=405)

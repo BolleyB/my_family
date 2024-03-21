@@ -1,10 +1,26 @@
-<div class="share-link-box">
-  <h3>Shareable Link:</h3>
-  <input
-    type="text"
-    id="shareable-link"
-    value="{{ shareable_link }}"
-    readonly
-  />
-  <button onclick="copyLink()" class="btn btn-primary">Copy Link</button>
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="event-details">
+  <!-- Event details -->
 </div>
+
+<div class="attendees-list">
+  <!-- Attendees list -->
+</div>
+
+<div class="share-link-box">
+  <!-- Shareable link -->
+</div>
+
+<div class="invite-section">
+  <h3>Invite Friends:</h3>
+  <form id="invite-form" method="post" action="{% url 'send_invitation' event.id %}">
+    {% csrf_token %}
+    <input type="text" id="search-input" name="search_input" placeholder="Search for users" />
+    <ul id="search-results"></ul>
+    <button type="submit" class="btn btn-success">Send Invite</button>
+  </form>
+</div>
+
+{% endblock %}

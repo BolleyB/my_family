@@ -1,33 +1,25 @@
-{% extends 'base.html' %} 
-{% block content %}
-<div class="mailbox">
-  <h1>Notifications</h1>
-  <ul class="notification-list">
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <h2>Notifications</h2>
+  <div class="notifications">
     {% for notification in notifications %}
-    <li class="notification">
-      <div class="notification-header">
-        <span class="notification-message">{{ notification.message }}</span>
-        <button class="show-details">Show Details</button>
-      </div>
-      <div class="notification-details" style="display: none">
-        <p><strong>Event Name:</strong> {{ notification.event.name }}</p>
-        <p><strong>Created At:</strong> {{ notification.created_at }}</p>
-        <p><strong>Read:</strong> {% if notification.read %} Yes {% else %} No {% endif %}</p>
-        <!-- Add more event details as needed -->
-      </div>
-    </li>
+    <div class="notification">
+      {% if not notification.read %}
+      <strong>{{ notification.message }}</strong>
+      {% else %} {{ notification.message }} {% endif %}
+      <small>{{ notification.created_at }}</small>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
+
+  <h2>Invitations</h2>
+  <div class="invitations">
+    {% for invitation in invitations %}
+    <div class="invitation">
+      <strong>{{ invitation.message }}</strong>
+      <small>{{ invitation.sent_at }}</small>
+    </div>
+    {% endfor %}
+  </div>
 </div>
-<script>
-  // JavaScript to toggle notification details
-  const showButtons = document.querySelectorAll(".show-details");
-  showButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const details = button.parentElement.nextElementSibling; // Get the next sibling of the parent element (notification)
-      details.style.display =
-        details.style.display === "none" ? "block" : "none";
-    });
-  });
-</script>
 {% endblock %}
