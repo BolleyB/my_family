@@ -1,4 +1,6 @@
-{% extends 'base.html' %} 
+<!-- notifications/notification_list.html -->
+
+{% extends 'base.html' %}
 {% block content %}
 <div class="mailbox">
   <h1>Notifications</h1>
@@ -9,10 +11,8 @@
         <span class="notification-message">{{ notification.message }}</span>
         <button class="show-details">Show Details</button>
       </div>
-      <div class="notification-details" style="display: none">
+      <div class="notification-details">
         <p><strong>Event Name:</strong> {{ notification.event.name }}</p>
-        <p><strong>Created At:</strong> {{ notification.created_at }}</p>
-        <p><strong>Read:</strong> {% if notification.read %} Yes {% else %} No {% endif %}</p>
         <!-- Add more event details as needed -->
       </div>
     </li>
@@ -21,12 +21,11 @@
 </div>
 <script>
   // JavaScript to toggle notification details
-  const showButtons = document.querySelectorAll(".show-details");
-  showButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const details = button.parentElement.nextElementSibling; // Get the next sibling of the parent element (notification)
-      details.style.display =
-        details.style.display === "none" ? "block" : "none";
+  const showButtons = document.querySelectorAll('.show-details');
+  showButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const details = button.nextElementSibling;
+      details.classList.toggle('show');
     });
   });
 </script>

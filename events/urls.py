@@ -12,5 +12,7 @@ urlpatterns = [
     path('notifications/', views.notifications, name='notifications'),
     path('events/<int:event_id>/invite/', views.invite_friends, name='invite_friends'),
     path('events/<int:event_id>/send_invitation/', views.send_invitation, name='send_invitation'),
-    path('invitation/<int:invitation_id>/join/', views.join_event, name='join_event'),
+    path('invitation/<str:invitation_id>/join/', views.join_event, name='join_event'),
+    path('notifications/', views.notification_list, name='notification_list'),  # Include this line
+    path('search/', views.search_users, name='search_users'),
 ]

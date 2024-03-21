@@ -4,15 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 
-class Notification(models.Model):
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    read = models.BooleanField(default=False)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # profile_picture = models.ImageField(upload_to='profile', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile', null=True, blank=True)
     bio = models.TextField(blank=True)
     friends = models.ManyToManyField("self", symmetrical=True, blank=True)
 
@@ -50,3 +45,13 @@ class Invitation(models.Model):
     message = models.CharField(max_length=255)
     sent_at = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
+
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, default=None)
+
+

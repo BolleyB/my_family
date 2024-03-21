@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 
+from django.http import JsonResponse
+
 from .models import UserForm,Event
 from .models import UserForm, Event, Profile, Notification, Invitation
 from django.contrib.auth import login
@@ -22,17 +24,11 @@ def home(request):
      return render(request, 'home.html', {'events': events})
 
 @login_required
-def notificiations(request, event_id):
+def notifications(request):
    notifications = Notification.objects.filter(recipient=request.user)
+   print('notifications', notifications)
    notifications.update(read=True)
    return render(request, 'notifications.html', {'notifications': notifications})
-
-
-@login_required
-def notifications(request):
-    user = request.user
-    notifications = Notification.objects.filter(recipient=user)
-    return render(request, 'notifications.html', {'notifications': notifications})
 
 
 @login_required
@@ -88,24 +84,6 @@ def cancel_attend_event(request, event_id):
    return redirect('events_detail', event_id=event_id)
 
 
-def send_invitation(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    invitation = Invitation(event=event, inviter=request.user)
-    invitation.save()
-
-    invitation_url = request.build_absolute_uri(reverse('join_event', kwargs={'invitation_id': invitation.id}))
-    
-    # You can send the invitation URL to the invitee via email, message, or any other means
-    
-    messages.success(request, "Invitation sent successfully.")
-    return redirect('event_detail', event_id=event_id)
-
-def join_event(request, invitation_id):
-    invitation = get_object_or_404(Invitation, pk=invitation_id)
-
-    # Logic to join the event goes here
-
-    return redirect('event_detail', event_id=invitation.event.id)
 
 
 def invite_friends(request, event_id):
@@ -130,3 +108,82 @@ def invite_friends(request, event_id):
     shareable_link = request.build_absolute_uri(reverse('join_event', kwargs={'invitation_id': 'placeholder'}))
 
     return render(request, 'invite_friends.html', {'event': event, 'form': form, 'shareable_link': shareable_link})
+
+
+@login_required
+def read_notifications(request):
+    read_notifications = Notification.objects.filter(recipient=request.user, read=True)
+    return render(request, 'read_notifications.html', {'notifications': read_notifications})
+
+@login_required
+def unread_notifications(request):
+    unread_notifications = Notification.objects.filter(recipient=request.user, read=False)
+    return render(request, 'unread_notifications.html', {'notifications': unread_notifications})
+
+
+def notification_list(request):
+   notifications = Notification.objects.filter(recipient=request.user)
+   return render(request, 'notifications/notifications_list', {'notification': notifications})
+
+
+def search_users(request):
+    if request.method == 'GET':
+        query = request.GET.get('q')
+        if query:
+            users = User.objects.filter(username__icontains=query)
+            users_data = [{'id': user.id, 'username': user.username} for user in users]
+            return JsonResponse(users_data, safe=False)
+    return JsonResponse([], safe=False)
+
+
+def join_event(request, invitation_id):
+    invitation = get_object_or_404(Invitation, pk=invitation_id)
+
+    if request.method == 'POST':
+        # Process the form submission
+        message = request.POST.get('message', '')
+        # Add the user to the list of attendees
+        invitation.event.attendees.add(request.user)
+        # Save the message (if provided)
+        if message:
+            # Here you can save the message along with the attendance confirmation
+            # For example, you might create a model to store the user's message along with the event and user information
+            # For simplicity, let's just print the message to the console for now
+            print(f"Message from {request.user.username}: {message}")
+        # Inform the user that they have successfully joined the event
+        messages.success(request, "You have successfully joined the event.")
+        return redirect('events_detail', event_id=invitation.event.id)
+    
+    # Render the join event page with the invitation details
+    return render(request, 'join_event.html', {'invitation': invitation})
+
+
+
+def send_invitation(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+
+    if request.method == 'POST':
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            invitation = form.save(commit=False)
+            invitation.event = event
+            invitation.inviter = request.user
+            invitation.save()
+
+            # Create and save notification
+            Notification.objects.create(
+                sender=request.user,
+                recipient=invitation.invitee,
+                message=f"You have received an invitation from {request.user.username} for event '{event.name}'."
+            )
+
+            # Display a success message
+            messages.success(request, "Invitation sent successfully.")
+            return redirect('event_detail', event_id=event_id)
+        else:
+            # Display an error message if form is not valid
+            messages.error(request, "Failed to send invitation. Please correct the errors in the form.")
+    else:
+        form = InvitationForm()
+
+    return render(request, 'invite_friends.html', {'event': event, 'form': form})
