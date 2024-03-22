@@ -20,6 +20,7 @@
       <th>First Name</th>
       <th>Last Name</th>
       <th>Email</th>
+      <th>Details</th>
     </tr>
     {% else %}
     <tr>
@@ -41,6 +42,11 @@
       <td>{{ user.first_name }}</td>
       <td>{{ user.last_name }}</td>
       <td>{{ user.email }}</td>
+      <td>
+        <a href="{% url 'profile' user.id %}" class="event-details-btn"
+          >View</a
+        >
+      </td>
       {% empty %}
       <li>No results found.</li>
       {% endfor %} {% else %} {% for event in results %}
