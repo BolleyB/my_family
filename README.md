@@ -12,10 +12,11 @@ Welcome to the My Family Website project! This website is designed to facilitate
 
 
 ## Screenshots
-![Home Page](https://github.com/BolleyB/my_family/assets/112034998/fdc6c215-ec22-4b31-a3f9-43d103611afa)
-![Profile](https://github.com/BolleyB/my_family/assets/112034998/649a804f-2b66-4702-ada7-fb7cf841150c)
-![Notifications](https://github.com/BolleyB/my_family/assets/112034998/3a7c8254-54ef-4966-8a6e-b42187abf8ce)
-![createevent](https://github.com/BolleyB/my_family/assets/112034998/fe67d176-287d-477c-a886-edfbb4a12a84)
+![homepage](https://github.com/BolleyB/my_family/assets/112034998/384b5884-4839-48d3-8c85-0b66c7e95f4c)
+![profilepage](https://github.com/BolleyB/my_family/assets/112034998/52daad21-4b0c-4e67-a2f7-0ccde7d1ceea)
+![Notis](https://github.com/BolleyB/my_family/assets/112034998/012d97c2-6ab5-4da2-9d4b-eb8b0892a572)
+![createevent](https://github.com/BolleyB/my_family/assets/112034998/d7ed314d-4bbb-49b7-8a81-338ba87a1954)
+
 
 
 
