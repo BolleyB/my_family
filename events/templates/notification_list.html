@@ -1,0 +1,32 @@
+<!-- notifications/notification_list.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="mailbox">
+  <h1>Notifications</h1>
+  <ul class="notification-list">
+    {% for notification in notifications %}
+    <li class="notification">
+      <div class="notification-header">
+        <span class="notification-message">{{ notification.message }}</span>
+        <button class="show-details">Show Details</button>
+      </div>
+      <div class="notification-details">
+        <p><strong>Event Name:</strong> {{ notification.event.name }}</p>
+        <!-- Add more event details as needed -->
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<script>
+  // JavaScript to toggle notification details
+  const showButtons = document.querySelectorAll('.show-details');
+  showButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const details = button.nextElementSibling;
+      details.classList.toggle('show');
+    });
+  });
+</script>
+{% endblock %}

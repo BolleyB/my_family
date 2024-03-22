@@ -1,10 +1,28 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile,Invitation
+from .models import Event, Invitation, Profile
 
-class InvitationForm(forms.Form):
-    invitee = forms.ModelChoiceField(queryset=User.objects.all(), label='Invitee')
-    message = forms.CharField(max_length=255, widget=forms.Textarea(attrs={'rows': 3}))
+
+class InvitationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(InvitationForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['invitee'].queryset = user.profile.friends.all()
+
+    class Meta:
+        model = Invitation
+        fields = ['invitee', 'message']
+
+
+
+
+class EventForm(forms.ModelForm):
+    date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
+
+    class Meta:
+        model = Event
+        fields = ['name', 'date', 'time', 'location', 'description', 'cost']
 
 
 class ProfileUpdateForm(forms.ModelForm):
