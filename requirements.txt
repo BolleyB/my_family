@@ -37,7 +37,6 @@ six==1.16.0
 sqlparse==0.4.4
 systemd-python==234
 typing_extensions==4.10.0
-ubuntu-advantage-tools==8001
 ufw==0.36.1
 unattended-upgrades==0.1
 urllib3==2.2.1
