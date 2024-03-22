@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 
 
+
+from .models import UserForm, Event, Profile, Notification
 from .models import UserForm,Event
 from .models import UserForm, Event, Profile, Notification, Invitation
 from django.contrib.auth import login
@@ -83,6 +85,20 @@ def cancel_attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
    event.attendees.remove(request.user)
    return redirect('events_detail', event_id=event_id)
+
+def search_view(request):
+    query = request.GET.get('search')  # Get the search query from the request
+    query2 = request.GET.get('typeofSearch')  # Get the search type from the request
+    print(query2)
+    if query:
+        # Perform a case-insensitive search using '__icontains'
+        results = Event.objects.filter(name__icontains=query)
+        if query2 == 'person':
+           results = User.objects.filter(username__icontains=query)
+    else:
+        results = Event.objects.none()  # Return an empty queryset if no query provided
+    return render(request, 'search_results.html', {'query': query, 'results': results, 'query2': query2})
+
 
 
 
