@@ -167,7 +167,7 @@ def send_invitation(request, event_id):
        form = InvitationForm(request.POST, initial={'event': event, 'inviter': inviter })
        if form.is_valid():
           invitation = form.save()
-          return redirect('event_detail')
+          return redirect('events/detail.html', {'event': event})
     else:
        form = InvitationForm()
     return render(request, 'send_invitation.html', {'form': form, 'invitees': invitees })
