@@ -162,6 +162,7 @@ def join_event(request, invitation_id):
 def send_invitation(request, event_id):
     event = Event.objects.get(id =event_id)
     inviter = User.objects.get(id=request.user.id)
+    invitees = User.objects.all()
     if request.method == 'POST':
        form = InvitationForm(request.POST, initial={'event': event, 'inviter': inviter })
        if form.is_valid():
@@ -169,7 +170,7 @@ def send_invitation(request, event_id):
           return redirect('event_detail')
     else:
        form = InvitationForm()
-    return render(request, 'send_invitation.html', {'form': form })
+    return render(request, 'send_invitation.html', {'form': form, 'invitees': invitees })
     # event = get_object_or_404(Event, pk=event_id)
 
     # if request.method == 'POST':

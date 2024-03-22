@@ -15,6 +15,8 @@ class InvitationForm(forms.ModelForm):
         fields = ['invitee', 'message']
 
 
+
+
 class EventForm(forms.ModelForm):
     date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
 
