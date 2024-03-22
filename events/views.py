@@ -13,6 +13,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import HttpResponse
+from django.http import JsonResponse
+from .forms import EventForm
 import googlemaps
 import os
 
@@ -20,8 +23,14 @@ import os
 
 # Create your views here.
 def home(request):
-     events = Event.objects.all()
-     return render(request, 'home.html', {'events': events})
+    profile = None
+    if request.user.is_authenticated:
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            pass
+    events = Event.objects.all()
+    return render(request, 'home.html', {'events': events, 'profile': profile})
 
 @login_required
 def notificiations(request, event_id):
@@ -39,11 +48,14 @@ def notifications(request):
 
 @login_required
 def profile(request):
-    user = request.user
-    profile = Profile.objects.get(user=user)
-    events = user.attending_events.all()
-    friends = profile.friends.all()
-    context = {'profile': profile, 'events': events, 'friends': friends, 'user': user}
+    if request.user.is_authenticated:
+        profile, created = Profile.objects.get_or_create(user=request.user)
+    else:
+        profile = None
+
+    events = Event.objects.all()
+    friends = profile.friends.all() if profile else []
+    context = {'profile': profile, 'events': events, 'friends': friends, 'user': request.user}
     return render(request, 'profile.html', context)
 
 
@@ -61,13 +73,16 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
-def profile(request):
-    return render(request, 'profile.html')
+
 
 class EventCreate(CreateView):
   model = Event
   fields = ['name', 'date', 'time', 'location', 'description', 'cost']
   success_url = '/'
+
+  def form_valid(self, form):
+        form.instance.organizer = self.request.user
+        return super().form_valid(form)
 
   def form_valid(self, form):
     form.instance.organizer = self.request.user
@@ -78,6 +93,19 @@ def events_detail(request, event_id):
    return render(request, 'events/detail.html', {
       'event': event,
    })
+
+
+def save_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.organizer = request.user
+            event.save()
+            # Return JSON response with event data
+            return JsonResponse({'name': event.name, 'latitude': event.latitude, 'longitude': event.longitude})
+    return HttpResponse("Invalid Request")
+
 
 def attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
@@ -122,13 +150,13 @@ def invite_friends(request, event_id):
 
 
 def update_location(request):
-   if request.user.is_authenticated:
-      if 'lat' in request.GET and 'lng' in request.GET:
-         lat = request.GET['lat']
-         lng = request.get['lng']
-         request.user.profile.latitude = lat
-         request.user.profile.longitude = lng
-         request.user.profile.save()
-   return render(request, '/')
+    if request.user.is_authenticated:
+        if 'lat' in request.GET and 'lng' in request.GET:
+            lat = request.GET['lat']
+            lng = request.GET['lng']
+            request.user.profile.latitude = lat
+            request.user.profile.longitude = lng
+            request.user.profile.save()
+    return HttpResponse()
 
 

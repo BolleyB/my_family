@@ -1,23 +1,88 @@
+
 {% extends 'base.html' %}
-
 {% block content %}
-
 {% if object %}
-  <h1>Edit <span class="black-text">{{ object.name }}</span></h1>
+<h1>Edit <span class="black-text">{{ object.name }}</span></h1>
 {% else %}
-  <h1>Create Event</h1>
+<h1>Create Event</h1>
 {% endif %}
 
-
-<!-- Leaving the action empty makes the form post to the same url used to display it -->
-<form action="" method="POST">
-  <!-- Django requires the following for security purposes -->
+<form id="event-form" action="{% url 'save_event' %}" method="POST" autocomplete="off">
   {% csrf_token %}
   <table>
-    <!-- Render the inputs inside of <tr>s & <td>s -->
     {{ form.as_table }}
+    <tr>
+      <td colspan="2">
+        <input
+          id="places-autocomplete"
+          type="text"
+          placeholder="Search for a place"
+        />
+        <input id="place-name" type="hidden" name="location_name" />
+        <input id="place-address" type="hidden" name="location_address" />
+        <input id="id_latitude" type="hidden" name="latitude" />
+        <input id="id_longitude" type="hidden" name="longitude" />
+      </td>
+    </tr>
   </table>
-  <input type="submit" value="Submit!" class="btn">
+  <input type="submit" value="Submit!" class="btn" />
 </form>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAldm_l9LJfPVCRzD9UChwmlQ-BEVG8pHs&libraries=places&callback=initMap" async defer></script>
+<script>
+function initAutoComplete() {
+    const input = document.getElementById('places-autocomplete');
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        console.log('Place:', place);
+        if (!place.geometry || !place.geometry.location) {
+            console.error('No valid geometry or location found for place:', place);
+            return;
+        }
+        console.log('Latitude:', place.geometry.location.lat());
+        console.log('Longitude:', place.geometry.location.lng());
+        document.getElementById('place-name').value = place.name || '';
+        document.getElementById('place-address').value = place.formatted_address || '';
+        document.getElementById('id_latitude').value = place.geometry.location.lat() || '';
+        document.getElementById('id_longitude').value = place.geometry.location.lng() || '';
+    });
+}
+
+  function initMap(){
+
+  }
+  window.onload = function() {
+    initAutoComplete();
+
+    document.getElementById('event-form').addEventListener('submit', function(event) {
+        // Populate latitude and longitude fields before submitting the form
+        document.getElementById('id_latitude').value = parseFloat(document.getElementById('id_latitude').value);
+        document.getElementById('id_longitude').value = parseFloat(document.getElementById('id_longitude').value);
+
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            const eventDataArray = data.split(',');
+            const eventData = {
+                name: eventDataArray[0],
+                latitude: parseFloat(eventDataArray[1]),
+                longitude: parseFloat(eventDataArray[2])
+            };
+            // Redirect to home page or event detail page after successful submission
+            window.location.href = "{% url 'home' %}?name=" + eventData.name + "&latitude=" + eventData.latitude + "&longitude=" + eventData.longitude;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+};
+</script>
 
 {% endblock %}
