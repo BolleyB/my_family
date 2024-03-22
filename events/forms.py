@@ -7,7 +7,9 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = ['invitee', 'message']
+
 from .models import Profile,Invitation
+
 
 class EventForm(forms.ModelForm):
     date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
