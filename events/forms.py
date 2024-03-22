@@ -1,14 +1,20 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Event, Invitation
+from .models import Event, Invitation, Profile
 
 
 class InvitationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(InvitationForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['invitee'].queryset = user.profile.friends.all()
+
     class Meta:
         model = Invitation
         fields = ['invitee', 'message']
 
-from .models import Profile,Invitation
+
 
 
 class EventForm(forms.ModelForm):
