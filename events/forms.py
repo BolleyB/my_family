@@ -1,23 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
+from .models import Event, Invitation, Profile
+=========
 from .models import Invitation
 from .models import Event
-=======
-from .models import Event, Invitation, Profile
->>>>>>> main
+>>>>>>>>> Temporary merge branch 2
 
 
-<<<<<<< HEAD
-class InvitationForm(forms.Form):
-    invitee = forms.ModelChoiceField(queryset=User.objects.all(), label='Invitee')
-    message = forms.CharField(max_length=255, widget=forms.Textarea(attrs={'rows': 3}))
-
-class EventForm(forms.ModelForm):
-    class Meta:
-        model = Event
-        fields = ['name', 'date', 'time', 'location', 'description', 'cost']
-=======
+<<<<<<<<< Temporary merge branch 1
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -67,4 +58,13 @@ class ProfileUpdateForm(forms.ModelForm):
         user.last_name = self.cleaned_data['last_name']
         user.save()
         return super(ProfileUpdateForm, self).save(commit=commit)
->>>>>>> main
+=========
+class InvitationForm(forms.Form):
+    invitee = forms.ModelChoiceField(queryset=User.objects.all(), label='Invitee')
+    message = forms.CharField(max_length=255, widget=forms.Textarea(attrs={'rows': 3}))
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['name', 'date', 'time', 'location', 'description', 'cost']
+>>>>>>>>> Temporary merge branch 2

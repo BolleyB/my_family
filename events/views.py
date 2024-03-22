@@ -13,15 +13,15 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
+from .forms import ProfileUpdateForm
+=========
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .forms import EventForm
 import googlemaps
 import os
-=======
-from .forms import ProfileUpdateForm
->>>>>>> main
+>>>>>>>>> Temporary merge branch 2
 
 from django.urls import reverse
 
@@ -48,7 +48,16 @@ def notifications(request):
 
 
 @login_required
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
+def profile(request, user_id):
+    current_user = request.user
+    user = User.objects.get(id=user_id)
+    profile = Profile.objects.get(user=user_id)
+    attended_events = Event.objects.filter(attendance__attendee_id=user_id)
+    friends = user.profile.get_friends()
+    print(friends)
+    context = {'profile': profile, 'events': attended_events, 'friends': friends, 'profileuser': user, 'currentuser': current_user}
+=========
 def profile(request):
     if request.user.is_authenticated:
         profile, created = Profile.objects.get_or_create(user=request.user)
@@ -58,16 +67,7 @@ def profile(request):
     events = Event.objects.all()
     friends = profile.friends.all() if profile else []
     context = {'profile': profile, 'events': events, 'friends': friends, 'user': request.user}
-=======
-def profile(request, user_id):
-    current_user = request.user
-    user = User.objects.get(id=user_id)
-    profile = Profile.objects.get(user=user_id)
-    attended_events = Event.objects.filter(attendance__attendee_id=user_id)
-    friends = user.profile.get_friends()
-    print(friends)
-    context = {'profile': profile, 'events': attended_events, 'friends': friends, 'profileuser': user, 'currentuser': current_user}
->>>>>>> main
+>>>>>>>>> Temporary merge branch 2
     return render(request, 'profile.html', context)
 
 
@@ -89,10 +89,7 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> main
 
 
 
@@ -117,7 +114,6 @@ def events_detail(request, event_id):
       'event': event,
    })
 
-<<<<<<< HEAD
 
 def save_event(request):
     if request.method == 'POST':
@@ -131,9 +127,6 @@ def save_event(request):
     return HttpResponse("Invalid Request")
 
 
-=======
-@login_required
->>>>>>> main
 def attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
    event.attendees.add(request.user)
@@ -223,7 +216,6 @@ def send_invitation(request, event_id):
     return render(request, 'send_invitation.html', {'form': form, 'invitees': invitees })
     # event = get_object_or_404(Event, pk=event_id)
 
-<<<<<<< HEAD
     return render(request, 'invite_friends.html', {'event': event, 'form': form})
 
 
@@ -238,56 +230,3 @@ def update_location(request):
     return HttpResponse()
 
 
-=======
-    # if request.method == 'POST':
-    #     # Process the form data
-    #     selected_user_ids = request.POST.getlist('selected_users')
-
-    #     # Send invitations to selected users
-    #     for user_id in selected_user_ids:
-    #         invitee = User.objects.filter(pk=user_id).first()
-    #         print(invitee)
-    #         if invitee:
-    #             form = InvitationForm(request.POST, event=event, inviter=request.user, invitee=invitee)
-    #             invitation = form.save()
-    #             print(invitation)
-    #             # Send notification to invitee
-    #             notification = Notification(
-    #                 recipient=invitee,
-    #                 event=event,
-    #                 message=f"You have received an invitation from {request.user.username} to attend {event.name}."
-    #             )
-    #             notification.save()
-
-    #     messages.success(request, "Invitations sent successfully.")
-    #     return JsonResponse({'message': 'Invitations sent successfully.'})
-
-    # Handle GET request (if needed)
-    return JsonResponse({'error': 'GET request not allowed.'}, status=405)
-@login_required
-def update_profile(request):
-    if request.method == 'POST':
-        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
-        if profile_form.is_valid():
-            profile_form.save()
-            request.user.email = profile_form.cleaned_data['user'].email
-            request.user.first_name = profile_form.cleaned_data['user'].first_name
-            request.user.last_name = profile_form.cleaned_data['user'].last_name
-            request.user.save()
-            return redirect(reverse('profile', kwargs={'user_id': request.user.id}))
-    else:
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'update_profile.html', {'profile_form': profile_form})
-
-@login_required
-def add_friend(request, friend_id):
-    friend = get_object_or_404(User, pk=friend_id)
-    request.user.profile.add_friend(friend.profile)
-    return redirect(reverse('profile', kwargs={'user_id': friend_id}))
-
-@login_required
-def remove_friend(request, friend_id):
-    friend = get_object_or_404(User, pk=friend_id)
-    request.user.profile.remove_friend(friend.profile)
-    return redirect(reverse('profile', kwargs={'user_id': friend_id}))
->>>>>>> main

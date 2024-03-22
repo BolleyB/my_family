@@ -53,11 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-<<<<<<< HEAD
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-=======
+<<<<<<<<< Temporary merge branch 1
     'django.contrib.messages.middleware.MessageMiddleware',
->>>>>>> main
+=========
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+>>>>>>>>> Temporary merge branch 2
 ]
 
 ROOT_URLCONF = 'myfamily_project.urls'
