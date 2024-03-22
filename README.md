@@ -19,8 +19,6 @@ Welcome to the My Family Website project! This website is designed to facilitate
 
 
 
-
-
 ## Features
 
 - User authentication and authorization
@@ -41,47 +39,6 @@ family_app/: The Django app containing the core functionality of the website.
 templates/: HTML templates for rendering the website pages.
 
 static/: Static files such as CSS, JavaScript, and images.
-## Installation
-
-To get started with My Family Website, follow these steps:
-
-Clone the repository to your local machine:
-```bash
-  git clone https://github.com/your-username/my-family-website.git
-```
-    
-
-Navigate to the project directory:
-```bash
-    cd my-family-website
-```
-
-Install project dependencies using pip:
-```bash
-    pip install -r requirements.txt
-```
-## Deployment to Heroku
-
-To deploy the My Family Website project to Heroku, follow these steps:
-
-Ensure you have a Heroku account and the Heroku CLI installed on your local machine.
-Log in to your Heroku account using the Heroku CLI:
-```bash
-  heroku login
-```
-Navigate to the project directory and create a new Heroku app:
-```bash
-  heroku create
-```
-Commit your changes to Git:
-```bash
-  git add .
-  git commit -m "Prepare for Heroku deployment"
-```
-Push your code to the Heroku remote repository:
-```bash
-  git push heroku main
-```
 
 ## Authors
 
@@ -99,7 +56,8 @@ Push your code to the Heroku remote repository:
 
 [Heroku](https://id.heroku.com/login) - Cloud platform for deployment
 
-
+# Deployment Link
+- [MyFamily](https://my-family-26dae1a2fe73.herokuapp.com)
 
 ## Contributing
 
