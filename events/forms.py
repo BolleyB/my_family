@@ -3,11 +3,6 @@ from django.contrib.auth.models import User
 from .models import Event, Invitation
 
 
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['profile_image']
-
 class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
