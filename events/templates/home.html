@@ -1,4 +1,70 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAldm_l9LJfPVCRzD9UChwmlQ-BEVG8pHs&libraries=places&callback=initMap" async defer></script>
+<script>
+    let map;
+    let infowindow;
+    let events = [
+        {% for event in events %}
+            {
+                name: "{{ event.name|escapejs }}",
+                latitude: {{ event.latitude|default:"NaN" }},
+                longitude: {{ event.longitude|default:"NaN" }}
+            }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    async function initMap() {
+        if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+            console.error('Google Maps API not loaded');
+            return;
+        }
+
+        const { Map, InfoWindow } = google.maps;
+
+        map = new Map(document.getElementById("map"), {
+            center: { lat: 37.0902, lng: -95.7129 }, // Centered on the U.S.
+            zoom: 4,
+        });
+
+        infowindow = new InfoWindow();
+
+        // Debugging: Log map object and events array
+        console.log("Map object:", map);
+        console.log("Events array:", events);
+
+        // Add markers for each event
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i];
+            console.log("Creating marker for event:", event.name, "at", { lat: parseFloat(event.latitude), lng: parseFloat(event.longitude) });
+            if (!isNaN(parseFloat(event.latitude)) && !isNaN(parseFloat(event.longitude))) {
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(event.latitude), lng: parseFloat(event.longitude) },
+                    map: map,
+                    title: event.name
+                });
+
+                marker.addListener("click", function() {
+                    infowindow.setContent(event.name);
+                    infowindow.open(map, marker);
+                });
+
+                // Pan the map to the new marker's position
+                map.panTo(marker.getPosition());
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        initMap(); // Call initMap to initialize the map
+
+        // Debugging: Log map object
+        console.log("Map object:", map);
+    });
+</script>
+
+<div id="map" style="height: 400px"></div>
+
 <h1>Events</h1>
 <table>
     <thead>
@@ -16,14 +82,16 @@
     <tbody>
         {% for event in events %}
         <tr>
-            <td>{{ event.name }} </td>
+            <td>{{ event.name }}</td>
             <td>{{ event.date }}</td>
             <td>{{ event.time }}</td>
             <td>{{ event.location }}</td>
             <td>{{ event.description }}</td>
             <td>{{ event.cost }}</td>
             <td>{{ event.organizer }}</td>
-            <td><a href="{% url 'events_detail' event.id %}" class="event-details-btn">View</a></td>
+            <td>
+                <a href="{% url 'events_detail' event.id %}" class="event-details-btn">View</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

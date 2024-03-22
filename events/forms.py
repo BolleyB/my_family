@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 from .models import Event, Invitation, Profile
 
 
+
+class InvitationForm(forms.Form):
+    invitee = forms.ModelChoiceField(queryset=User.objects.all(), label='Invitee')
+    message = forms.CharField(max_length=255, widget=forms.Textarea(attrs={'rows': 3}))
+
 class InvitationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

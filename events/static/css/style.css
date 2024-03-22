@@ -34,7 +34,7 @@ footer.page-footer {
   outline: none;
 }
 .button-like-link:active {
-  background-color: lightgray;
+background-color: lightgray;
 }
 
 #search {

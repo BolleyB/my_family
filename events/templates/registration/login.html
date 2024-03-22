@@ -1,6 +1,19 @@
 {% extends 'base.html' %} {% block content %}
 
 <h1>Log In</h1>
+<script>
+  function getLocationAndRedirect(){
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+        window.location.href = '/update-location/?lat=' + lat + '&lng=' + lng;
+      });
+    } else {
+      alert("Location is not supported by this browser.");
+    }
+  }
+</script>
 
 <form method="POST" action="{% url 'login' %}">
   {% csrf_token %} {{ form.as_p }}
@@ -8,6 +21,9 @@
   <button type="submit" class="btn">Log In</button>
 </form>
 
+<script>
+  document.querySelector('form').addEventListener('submit', getLocationAndRedirect);
+</script>
 <p>
   Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
 </p>

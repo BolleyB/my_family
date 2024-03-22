@@ -13,15 +13,28 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import InvitationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import HttpResponse
+from django.http import JsonResponse
+from .forms import EventForm
+import googlemaps
+import os
+
 from .forms import ProfileUpdateForm
+
 
 from django.urls import reverse
 
 
 # Create your views here.
 def home(request):
-     events = Event.objects.all()
-     return render(request, 'home.html', {'events': events})
+    profile = None
+    if request.user.is_authenticated:
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            pass
+    events = Event.objects.all()
+    return render(request, 'home.html', {'events': events, 'profile': profile})
 
 def notifications(request):
     # Get notifications for the logged-in user
@@ -65,11 +78,14 @@ def signup(request):
 
 
 
-
 class EventCreate(LoginRequiredMixin,CreateView):
   model = Event
   fields = ['name', 'date', 'time', 'location', 'description', 'cost']
   success_url = '/'
+
+  def form_valid(self, form):
+        form.instance.organizer = self.request.user
+        return super().form_valid(form)
 
   def form_valid(self, form):
     form.instance.organizer = self.request.user
@@ -83,7 +99,22 @@ def events_detail(request, event_id):
       'event': event,
    })
 
+
+def save_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.organizer = request.user
+            event.save()
+            # Return JSON response with event data
+            return JsonResponse({'name': event.name, 'latitude': event.latitude, 'longitude': event.longitude})
+    return HttpResponse("Invalid Request")
+
+
+
 @login_required
+
 def attend_event(request, event_id):
    event = get_object_or_404(Event, pk=event_id)
    event.attendees.add(request.user)
@@ -218,6 +249,20 @@ def add_friend(request, friend_id):
     friend = get_object_or_404(User, pk=friend_id)
     request.user.profile.add_friend(friend.profile)
     return redirect(reverse('profile', kwargs={'user_id': friend_id}))
+
+    return render(request, 'invite_friends.html', {'event': event, 'form': form})
+
+
+def update_location(request):
+    if request.user.is_authenticated:
+        if 'lat' in request.GET and 'lng' in request.GET:
+            lat = request.GET['lat']
+            lng = request.GET['lng']
+            request.user.profile.latitude = lat
+            request.user.profile.longitude = lng
+            request.user.profile.save()
+    return HttpResponse()
+
 
 @login_required
 def remove_friend(request, friend_id):
