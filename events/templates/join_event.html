@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Join Event: {{ invitation.event.name }}</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="message">Leave a message (optional):</label><br />
+  <textarea id="message" name="message" rows="4" cols="50"></textarea><br />
+  <button type="submit">Join Event</button>
+</form>
+{% endblock %}

@@ -14,11 +14,13 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <script
       type="text/javascript"
       src="https://code.jquery.com/jquery-2.1.1.min.js"
     ></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
   </head>
   <body>
     <header class="navbar-fixed">
@@ -28,7 +30,19 @@
             <li>
               <a href="/" class="left brand-logo">&nbsp;&nbsp;My Family</a>
             </li>
+            <li id="search">
+              <div class="search-container">
+                <form
+                  autocomplete="off"
+                  method="get"
+                  action="{% url 'search' %}"
+                >
+                  <input type="text" placeholder="Search.." name="search" />
+                </form>
+              </div>
+            </li>
           </ul>
+
           <ul class="right" style="font-size: 25px">
             {% if user.is_authenticated %}
             <li>Welcome, {{ user.username }}</li>
@@ -39,7 +53,7 @@
               </a>
             </li>
             <ul id="dropdown1" class="dropdown-content">
-              <li><a href="/profile">Profile</a></li>
+              <li><a href="{% url 'profile' user.id%}">Profile</a></li>
               <li><a href="/events/create/">Create Event</a></li>
               <li><a href="{% url 'notifications' %}">Notifications</a></li>
               <!-- Add link to notifications page -->

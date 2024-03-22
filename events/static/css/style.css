@@ -34,6 +34,43 @@ footer.page-footer {
   outline: none;
 }
 .button-like-link:active {
+<<<<<<< HEAD
 background-color: lightgray;
 }
 
+=======
+  background-color: lightgray;
+}
+
+#search {
+  margin-top: 4px;
+  margin-left: 37%;
+  width: 600px;
+}
+#search .search-container input {
+  background-color: white;
+  font-size: 24px;
+}
+#search .search-container input:focus {
+  background-color: rgb(211, 255, 242);
+}
+#type-of-search {
+  display: flex;
+  justify-content: center;
+}
+
+#type-of-search form button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+}
+
+#type-of-search form button:last-child {
+  margin-right: 20px;
+}
+>>>>>>> main
