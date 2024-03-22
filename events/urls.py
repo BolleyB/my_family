@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from .views import send_invitation
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -13,7 +13,11 @@ urlpatterns = [
     path('events/<int:event_id>/cancel_attend/', views.cancel_attend_event, name='cancel_attend'),
     path('search/', views.search_view, name='search'),
     path('notifications/', views.notifications, name='notifications'),
-    path('events/<int:event_id>/invite/', views.invite_friends, name='invite_friends'),
+    path('invitation/<str:invitation_id>/join/', views.join_event, name='join_event'),
+    path('notifications/', views.notification_list, name='notification_list'),  # Include this line
+    path('search/', views.search_users, name='search_users'),
+    path('events/<int:event_id>/send_invitation/', views.send_invitation, name='send_invitation'),
     path('friend/<int:friend_id>/add/', views.add_friend, name='add_friend'),
     path('friend/<int:friend_id>/remove/', views.remove_friend, name='remove_friend'),
+
 ]
