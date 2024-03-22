@@ -12,6 +12,10 @@ Welcome to the My Family Website project! This website is designed to facilitate
 
 
 ## Screenshots
+![Home Page](https://github.com/BolleyB/my_family/assets/112034998/fdc6c215-ec22-4b31-a3f9-43d103611afa)
+![Profile](https://github.com/BolleyB/my_family/assets/112034998/649a804f-2b66-4702-ada7-fb7cf841150c)
+![Notifications](https://github.com/BolleyB/my_family/assets/112034998/3a7c8254-54ef-4966-8a6e-b42187abf8ce)
+![createevent](https://github.com/BolleyB/my_family/assets/112034998/fe67d176-287d-477c-a886-edfbb4a12a84)
 
 
 
