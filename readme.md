@@ -15,17 +15,17 @@ The project utilizes various dependencies managed via pip and listed in the requ
 Built With
 Django - The web framework for perfectionists with deadlines
 Bootstrap - Front-end component library
-SQLite - Embedded database used for development
+PostgreSQL - Robust RDBMS for Production
 Contributing
 Contributions are welcome! Please read CONTRIBUTING.md for details on how to contribute to this project.
 
 Authors
-John Doe - johndoe
-Jane Smith - janesmith
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+Jade Moslares - jademoslares
+Jordan Hale - Mr-Spark3
+Hugo Webster - BolleyB
+
 
 Acknowledgments
 Hat tip to anyone whose code was used
 Inspiration
-etc.
+Just trying to get where I'm supposed to be on time with the tools I need.
