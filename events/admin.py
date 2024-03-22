@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Event
+from .models import Profile, Event, Notification, Invitation
 # Register your models here.
 
 @admin.register(Profile)
@@ -10,4 +10,5 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Event)
-
+admin.site.register(Notification)
+admin.site.register(Invitation)
