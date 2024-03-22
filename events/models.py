@@ -13,6 +13,15 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def add_friend(self, friend_profile):
+        self.friends.add(friend_profile)
+
+    def remove_friend(self, friend_profile):
+        self.friends.remove(friend_profile)
+
+    def get_friends(self):
+        return self.friends.all()
 
 
 class Event(models.Model):

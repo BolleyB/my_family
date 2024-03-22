@@ -1,31 +1,79 @@
 {% extends 'base.html' %} {% block content %}
-<div class="welcome-message">
-  <h1>Welcome, {{ user.username }}</h1>
-  <p>{{ profile.bio }}</p>
+<div class="main">
+  <h2 style="text-align: center">{{profileuser.username}}</h2>
+  <div class="card">
+    <div class="card-body">
+      {% if profileuser == currentuser %}
+      <a href="{% url 'update_profile' %}"
+        ><i class="fa fa-pen fa-xs edit"></i
+      ></a>
+      {% else %}
+      <a href="{% url 'add_friend' profileuser.id %}"
+        ><i class="fa fa-user-plus fa-xs add-friend"></i>
+      </a>
+
+      <a href="{% url 'remove_friend' profileuser.id %}"
+        ><i class="fa fa-user-times fa-xs remove-friend"></i>
+      </a>
+      {% endif %}
+      <table>
+        <tbody>
+          <tr>
+            <td>First Name</td>
+            <td>:</td>
+            <td>{{profileuser.first_name}}</td>
+          </tr>
+          <tr>
+            <td>Last Name</td>
+            <td>:</td>
+            <td>{{profileuser.last_name}}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>:</td>
+            <td>{{profileuser.email}}</td>
+          </tr>
+          <tr>
+            <td>Bio</td>
+            <td>:</td>
+            <td>{{profileuser.profile.bio}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <h2>Friends</h2>
+  <div class="card">
+    <div class="card-body">
+      <ul style="text-align: center;">
+        {% for friend in friends %}
+        <li><a href="{% url 'profile' friend.user.id %}">{{ friend.user.username }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <h2>Attending Events</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: center">Event</th>
+            <th style="text-align: center">Organizer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td style="text-align: center">
+              <a href="{% url 'events_detail' event.id %}">{{ event.name }}</a>
+            </td>
+            <td style="text-align: center">{{event.organizer}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endblock %}
 </div>
-
-<div class="container">
-  <div class="profile-info">
-    <h2>Profile Information</h2>
-    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-  </div>
-
-  <div class="friends">
-    <h2>Friends</h2>
-    <ul>
-      {% for friend in friends %}
-      <li>{{ friend.username }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="events">
-    <h2>Events</h2>
-    <ul>
-      {% for event in events %}
-      <li>{{ event.name }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-{% endblock %}
